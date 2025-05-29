@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: streamlit-leaflet
+Version: 0.1.0
+Summary: Streamlit component for rendering leaflet maps
+Home-page: https://github.com/giswqs/streamlit-leaflet
+Author: Qiusheng Wu
+Author-email: giswqs@gmail.com
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: streamlit (>=0.63)
+
+# streamlit-leaflet
+A Streamlit component for rendering leaflet maps

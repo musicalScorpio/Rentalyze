@@ -1,0 +1,42 @@
+.brand-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.brand-text span {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(90deg, #1f51ff, #00bfff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: walkGlow 3s ease forwards, glow 2.5s ease-in-out 3s infinite;
+}
+
+/* Stagger animation delays for each letter */
+.brand-text span:nth-child(1) { animation-delay: 0.1s, 3.1s; }
+.brand-text span:nth-child(2) { animation-delay: 0.2s, 3.2s; }
+.brand-text span:nth-child(3) { animation-delay: 0.3s, 3.3s; }
+.brand-text span:nth-child(4) { animation-delay: 0.4s, 3.4s; }
+.brand-text span:nth-child(5) { animation-delay: 0.5s, 3.5s; }
+.brand-text span:nth-child(6) { animation-delay: 0.6s, 3.6s; }
+.brand-text span:nth-child(7) { animation-delay: 0.7s, 3.7s; }
+.brand-text span:nth-child(8) { animation-delay: 0.8s, 3.8s; }
+.brand-text span:nth-child(9) { animation-delay: 0.9s, 3.9s; }
+
+@keyframes walkGlow {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 5px #00bfff; }
+    50%      { text-shadow: 0 0 15px #1f51ff; }
+}
