@@ -1,0 +1,51 @@
+state,state_name,tax_rate,homestead_exemption,investment_adjustment_factor
+AL,Alabama,0.0041,4000,1.15
+AK,Alaska,0.0119,20000,1.1
+AZ,Arizona,0.0065,15000,1.1
+AR,Arkansas,0.0061,350,1.12
+CA,California,0.0073,7000,1.1
+CO,Colorado,0.0051,10000,1.12
+CT,Connecticut,0.0204,0,1.2
+DE,Delaware,0.0056,500,1.1
+FL,Florida,0.0087,50000,1.2
+GA,Georgia,0.0095,2000,1.12
+HI,Hawaii,0.0028,80000,1.15
+ID,Idaho,0.0075,100000,1.1
+IL,Illinois,0.0227,6000,1.25
+IN,Indiana,0.0085,45000,1.15
+IA,Iowa,0.0143,4850,1.18
+KS,Kansas,0.0132,2000,1.15
+KY,Kentucky,0.0086,40000,1.1
+LA,Louisiana,0.0052,7500,1.12
+ME,Maine,0.0126,25000,1.15
+MD,Maryland,0.0109,0,1.12
+MA,Massachusetts,0.0112,0,1.15
+MI,Michigan,0.0154,18000,1.2
+MN,Minnesota,0.0105,30000,1.15
+MS,Mississippi,0.0078,7500,1.12
+MO,Missouri,0.0097,0,1.12
+MT,Montana,0.0083,0,1.1
+NE,Nebraska,0.0184,0,1.2
+NV,Nevada,0.006,0,1.1
+NH,New Hampshire,0.019,0,1.22
+NJ,New Jersey,0.0213,0,1.25
+NM,New Mexico,0.0066,2000,1.1
+NY,New York,0.0172,30000,1.18
+NC,North Carolina,0.0084,25000,1.1
+ND,North Dakota,0.0099,20000,1.15
+OH,Ohio,0.0157,25000,1.2
+OK,Oklahoma,0.0087,1000,1.1
+OR,Oregon,0.0094,0,1.1
+PA,Pennsylvania,0.0135,0,1.15
+RI,Rhode Island,0.0149,0,1.15
+SC,South Carolina,0.0057,50000,1.12
+SD,South Dakota,0.012,0,1.15
+TN,Tennessee,0.0064,0,1.1
+TX,Texas,0.0181,40000,1.15
+UT,Utah,0.0063,0,1.1
+VT,Vermont,0.0178,0,1.2
+VA,Virginia,0.0082,0,1.12
+WA,Washington,0.0092,0,1.1
+WV,West Virginia,0.0058,20000,1.12
+WI,Wisconsin,0.0173,0,1.2
+WY,Wyoming,0.0057,0,1.1

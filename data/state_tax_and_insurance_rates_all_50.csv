@@ -1,0 +1,51 @@
+state,state_name,tax_rate,insurance_rate
+AL,Alabama,0.0041,0.005
+AK,Alaska,0.0119,0.003
+AZ,Arizona,0.0065,0.004
+AR,Arkansas,0.0061,0.0055
+CA,California,0.0073,0.0025
+CO,Colorado,0.0051,0.0035
+CT,Connecticut,0.0204,0.0029
+DE,Delaware,0.0056,0.0026
+FL,Florida,0.0087,0.009
+GA,Georgia,0.0095,0.0045
+HI,Hawaii,0.0028,0.0019
+ID,Idaho,0.0075,0.0028
+IL,Illinois,0.0227,0.0043
+IN,Indiana,0.0085,0.0039
+IA,Iowa,0.0143,0.0027
+KS,Kansas,0.0132,0.0035
+KY,Kentucky,0.0086,0.0042
+LA,Louisiana,0.0052,0.0095
+ME,Maine,0.0126,0.0026
+MD,Maryland,0.0109,0.0028
+MA,Massachusetts,0.0112,0.0024
+MI,Michigan,0.0154,0.0041
+MN,Minnesota,0.0105,0.0033
+MS,Mississippi,0.0078,0.0062
+MO,Missouri,0.0097,0.004
+MT,Montana,0.0083,0.0029
+NE,Nebraska,0.0184,0.0036
+NV,Nevada,0.006,0.0022
+NH,New Hampshire,0.019,0.0025
+NJ,New Jersey,0.0213,0.0031
+NM,New Mexico,0.0066,0.0044
+NY,New York,0.0172,0.0032
+NC,North Carolina,0.0084,0.0046
+ND,North Dakota,0.0099,0.0026
+OH,Ohio,0.0157,0.004
+OK,Oklahoma,0.0087,0.0065
+OR,Oregon,0.0094,0.0023
+PA,Pennsylvania,0.0135,0.003
+RI,Rhode Island,0.0149,0.0027
+SC,South Carolina,0.0057,0.005
+SD,South Dakota,0.012,0.003
+TN,Tennessee,0.0064,0.0043
+TX,Texas,0.0181,0.0075
+UT,Utah,0.0063,0.0021
+VT,Vermont,0.0178,0.0026
+VA,Virginia,0.0082,0.0034
+WA,Washington,0.0092,0.0029
+WV,West Virginia,0.0058,0.0042
+WI,Wisconsin,0.0173,0.0035
+WY,Wyoming,0.0057,0.0028

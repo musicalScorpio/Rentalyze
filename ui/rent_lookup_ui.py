@@ -1,9 +1,10 @@
 import streamlit as st
 import requests
 import pandas as pd
+import plotly.express as px
 
 # API URL
-RENTAL_API_URL = "http://127.0.0.1:5000/api/rental-data"
+RENTAL_API_URL = "http://127.0.0.1:5001/api/rental-data"
 COUNTY_API_URL = "http://127.0.0.1:5000/api/counties"
 state_colors = {
         "CA": "#0039A6",   # California - Blue
@@ -152,7 +153,34 @@ if state:
 
             if rent_data:
                 rent_df = pd.DataFrame(rent_data)
-                st.table(rent_df)
+
+                col1, col2 = st.columns(2)
+
+                with col1:
+                    st.table(rent_df)
+
+                with col2:
+                    try:
+                        # Clean up column names if needed
+                        rent_df.columns = rent_df.columns.str.strip()
+
+                        fig = px.bar(
+                            rent_df,
+                            x="Unit Type",  # Categorical axis (x-axis)
+                            y="Rent ($)",  # Numeric axis (y-axis)
+                            title="Rent by Unit Type",
+                            labels={"Rent ($)": "Monthly Rent", "Unit Type": "Bedroom Size"},
+                        )
+                        # Reduce margins and font size for compact layout
+                        fig.update_layout(
+                            title_font_size=16,
+                            height=300,  # You can tweak this (e.g., 250–350)
+                            margin=dict(l=10, r=10, t=30, b=10)
+                        )
+
+                        st.plotly_chart(fig, use_container_width=True)
+                    except Exception as e:
+                        st.warning(f"Could not render chart: {e}")
 
                 st.info("These rents represent HUD's estimates of what renters typically pay, including utilities.")
             else:

@@ -8,6 +8,7 @@ import pandas as pd
 import os
 import utils.file_parser as fp
 import base64
+import rent_estimator_service
 import utils.us_states as us_states
 
 app = Flask(__name__)
@@ -15,7 +16,6 @@ app = Flask(__name__)
 # Load the data (this could be refactored for performance if it's large)
 df = fp.parse_2025_data()
 df = df.dropna(subset=["countyname", "stusps"])
-
 
 # Helper function to get flag HTML
 def get_flag_html(state_abbr):
@@ -77,6 +77,13 @@ def get_counties():
     else:
         return jsonify({"error": "Invalid state selection."}), 400
 
+@app.route('/api/rent', methods=['GET'])
+def get_rentByZip():
+    zip_code = request.args.get('zip_code')
+    bedrooms = request.args.get('bedrooms')
+    resp = rent_estimator_service.get_zip_rent(zip_code,bedrooms)
+    return resp
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5001, debug=True)
