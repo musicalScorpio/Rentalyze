@@ -35,7 +35,7 @@
 
 ## 🛠️ Setup Instructions (Step-by-Step)
 
-### 📥 Step 1: Clone the Repository
+**📥 Step 1: Clone the Repository**
 
 ```bash
 git clone https://github.com/musicalScorpio/Rentalyze.git
