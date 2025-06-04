@@ -2,4 +2,10 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+<<<<<<< HEAD
 /env/
+=======
+/env/relatize.env
+/env/
+.idea/
+>>>>>>> fc4f7ae (Update .gitignore to exclude IDE and environment files)
