@@ -34,21 +34,21 @@
 ---
 
 ## 🛠️ Setup Instructions (Step-by-Step)
-
-##📥 Step 1: Clone the Repository
-
 ```bash
+**📥 Step 1: Clone the Repository**
+
+
 git clone https://github.com/musicalScorpio/Rentalyze.git
 cd Rentalyze
 
-##🐍 Step 2: Create a Virtual Environment
+**🐍 Step 2: Create a Virtual Environment**
 bash
 Copy
 Edit
 python3 -m venv venv
 source venv/bin/activate  # For Windows use: venv\Scripts\activate
 
-##📦 Step 3: Install Dependencies
+**📦 Step 3: Install Dependencies**
 bash
 Copy
 Edit
