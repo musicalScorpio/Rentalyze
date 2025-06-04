@@ -33,32 +33,43 @@
 
 ---
 
-## 🛠️ Setup Instructions
+## 🛠️ Setup Instructions (Step-by-Step)
 
-1. **Clone the Repo**
-   ```bash
-   git clone https://github.com/musicalScorpio/Rentalyze.git
-   cd Rentalyze
-Set Up Virtual Environment
+### 📥 Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/musicalScorpio/Rentalyze.git
+cd Rentalyze
+
+**🐍 Step 2: Create a Virtual Environment**
 bash
 Copy
 Edit
 python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-Configure Environment Variables
-Create a .env file with keys such as:
-ini
+source venv/bin/activate  # For Windows use: venv\Scripts\activate
+
+**📦 Step 3: Install Dependencies**
+bash
 Copy
 Edit
-FRED_API_KEY=your_key_here
-Run Backend APIs
+pip install -r requirements.txt
+
+**🔐 Step 4: Create a .env File**
+In the apis/ directory, create a .env file with your API keys:
+
+env
+Copy
+Edit
+FRED_API_KEY=your_fred_api_key_here
+
+**🧠 Step 5: Start the Backend API**
 bash
 Copy
 Edit
 cd apis
 python app.py  # or flask run
-Launch the Streamlit App
+
+**💻 Step 6: Launch the Streamlit Frontend**
 bash
 Copy
 Edit
@@ -68,14 +79,18 @@ streamlit run ui/main.py
 
  Integrate MLS or Zillow API for richer listing data
  Add map-based property selector
- Enable export of investment analysis to PDF
+  Enable export of investment analysis to PDF
  User login and history tracking
- Monetization layer (premium features)
+  Monetization layer (premium features)
 🙌 Contributing
 
 Have a feature idea or want to fix a bug? Fork the repo and submit a PR. All contributors welcome!
 
-🧾 License
+**🧾 License**
 
 MIT License. See LICENSE file for details.
 
+**📫 Contact**
+
+Created by Sam Mukherjee
+For inquiries or collaborations, email: sam.mukherjee@gmail.com
