@@ -1,0 +1,12 @@
+{
+    "prompts": [
+        {
+            "reference_key": "RADIUS_SEARCH_FOR_ADDRESS",
+            "prompt": "You are a real estate expert with comprehensive knowledge of the market. Please provide the details of the 5 most recently sold properties within a 3-mile radius of {}, sorted by sale price in descending order. For each property, include the following information in a table format: Address, Number of Bedrooms, Number of Bathrooms, Square Footage, Sale Price, Sale Date."
+        },
+        {
+            "reference_key": "TREND_SEARCH_FOR_ADDRESS",
+            "prompt": "You are an AI assistant. Provide a summary of recent real estate trends near {}. Include the average home price, recent price changes, and an analysis of market demand. Use a short summary in a bulletted format."
+        }
+    ]
+}

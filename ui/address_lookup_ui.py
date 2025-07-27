@@ -10,6 +10,11 @@ import pydeck as pdk
 import folium
 from streamlit_folium import st_folium
 from folium import plugins
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import ai.sales_comps_tool as sales_comp_tool
+import ai.charting_tool as charting_tool
 
 
 # Backend API endpoint (Flask API should be running on this endpoint)
@@ -72,13 +77,19 @@ def main():
                     # Display in Streamlit
                     st.subheader("🏠 Fair Market Rents by Unit Type")
                     st.dataframe(rent_df, use_container_width=True)
-
+                    parts = [part.strip() for part in address.split(",")]
                     if offer_price and rent_price:
                         url = f"{ADDRESS_LOOKUP_API_URL}/roi-estimate?price={offer_price}&rent={rent_price}&state={location['state_code']}&down_payment={.25 * offer_price}&credit_score={700}&has_mortgage=True"
                         response = requests.get(url)
                         if response.status_code == 200:
                             resp_json = response.json()
                             display_investment_summary(offer_price=offer_price, rent_price= rent_price, resp_json=resp_json)
+                            st.write(f"Comparable sold recently")
+                            print(f'Street is {parts[0]}')
+                            data = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'],api_key='1771dee1eb8a4add11504c4ae6240721')
+                            fig = charting_tool.getChart(data,offer_price)
+                            st.pyplot(fig)
+
                             #st.write(f"Assuming 700 credit..")
                             #st.write(f"You entered an offer of: ${offer_price:,.2f}")
                             #st.write(f"You rent for 12 months: ${rent_price * 12:,.2f}")
@@ -102,24 +113,11 @@ def main():
                         popup=address,
                         icon=folium.Icon(icon='arrow-up', angle=180, color='blue')  # Custom pin icon
                     ).add_to(m)
+
                     #Shows POI
                     # Let user select POI category
                     category = st.selectbox("Show nearby points of interest",
-                                            ["grocery", "restaurant", "school", "hospital", "gym", "entertainment"])
-
-                    # Call the POI service
-                    try:
-                        response = requests.get("http://127.0.0.1:5002/nearby", params={
-                            "lat": latitude,
-                            "lon": longitude,
-                            "category": category
-                        })
-                        response.raise_for_status()
-                        poi_data = response.json().get("places", [])
-                    except Exception as e:
-                        st.warning(f"Failed to fetch nearby {category}s: {e}")
-                        poi_data = []
-
+                                            ["recentsales", "grocery", "restaurant", "school", "hospital", "gym", "entertainment"])
                     # Icon color map for categories
                     icon_color = {
                         "grocery": "green",
@@ -127,24 +125,40 @@ def main():
                         "school": "purple",
                         "hospital": "darkred",
                         "gym": "orange",
-                        "entertainment": "cadetblue"
+                        "entertainment": "cadetblue",
+                        "recentsales": "purple"
                     }.get(category, "gray")
+                    print(f'category.title>>>>>>>>>> {str(category.title())}')
+                    if str(category.title()).lower() != 'recentsales':
+                        # Call the POI service
+                        try:
+                            response = requests.get("http://127.0.0.1:5002/nearby", params={
+                                "lat": latitude,
+                                "lon": longitude,
+                                "category": category
+                            })
+                            response.raise_for_status()
+                            poi_data = response.json().get("places", [])
+                            # Add POIs to Folium map
+                            add_to_map(category, icon_color, latitude, longitude, m, poi_data)
+                        except Exception as e:
+                            st.warning(f"Failed to fetch nearby {category}s: {e}")
+                            poi_data = []
 
-                    # Add POI markers
-                    for poi in poi_data:
-                        poi_name = poi.get("name", "Unnamed")
-                        poi_lat = poi["lat"]
-                        poi_lon = poi["lon"]
+                    valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True,api_key='1771dee1eb8a4add11504c4ae6240721')
+                    print(f"valid_tuples == {valid_tuples}")
+                    #Add Sales Comparable
+                    poi_data_name_lat_long = [
+                        {
+                            #"name": f"${t[0]:,.0f} - {t[3]}, {t[4]}, {t[5]} {t[6]} ({t[7]}bd/{t[8]}ba)",
+                            "name": t[3],
+                            "lat": float(t[7]),
+                            "lon": float(t[8])
+                        }
+                        for t in valid_tuples["comparables"]
+                    ]
 
-                        # Calculate distance in miles
-                        distance_miles = haversine_miles(latitude, longitude, poi_lat, poi_lon)
-                        popup_text = f"{category.title()}: {poi_name}<br>📍 {distance_miles:.2f} miles away"
-
-                        folium.Marker(
-                            location=[poi_lat, poi_lon],
-                            popup=popup_text,
-                            icon=folium.Icon(color=icon_color, icon="info-sign")
-                        ).add_to(m)
+                    add_to_map(category, icon_color, latitude, longitude, m, valid_tuples)
 
                     # Display the map in Streamlit using st_folium
                     st_folium(m, width=700, height=500)
@@ -154,6 +168,25 @@ def main():
             st.write("No suggestions found. Try again with more details.")
     else:
         st.write("Please type at least 3 characters to fetch suggestions.")
+
+
+def add_to_map(category, icon_color, latitude_of_source_property, longitude_of_source_property, m, poi_data_name_lat_long):
+    # Add POI markers
+    for poi in poi_data_name_lat_long:
+        poi_name = poi.get("name", "Unnamed")
+        poi_lat = poi["lat"]
+        poi_lon = poi["lon"]
+
+        # Calculate distance in miles
+        distance_miles = haversine_miles(latitude_of_source_property, longitude_of_source_property, poi_lat, poi_lon)
+        popup_text = f"{category.title()}: {poi_name}<br>📍 {distance_miles:.2f} miles away"
+
+        folium.Marker(
+            location=[poi_lat, poi_lon],
+            popup=popup_text,
+            icon=folium.Icon(color=icon_color, icon="info-sign")
+        ).add_to(m)
+
 
 from math import radians, sin, cos, sqrt, atan2
 
