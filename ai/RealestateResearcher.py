@@ -21,7 +21,6 @@ with open("../utils/prompts.json", "r") as file:
     data = json.load(file)
 
 # Retrieve the OpenAI API key from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Function to call OpenAI with the given prompt

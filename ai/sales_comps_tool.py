@@ -13,10 +13,21 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
-load_dotenv('../env/relatize.env')
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+
+# Dynamically resolve path to relatize.env located in /env/ folder one level above this script
+env_path = Path(__file__).resolve().parents[1] / "env" / "relatize.env"
+load_dotenv(dotenv_path=env_path)
+
+# Confirm it's loaded
 ATTOM_BASE_URL_V1 = os.getenv("ATTOM_BASE_URL_V1")
 ATTOM_BASE_URL_V2 = os.getenv("ATTOM_BASE_URL_V2")
 ATTOM_API_KEY = os.getenv("ATTOM_API_KEY")
+print("Loaded ENV Keys:")
+print([k for k in os.environ.keys() if 'ATTOM' in k])
+
 """
 def parse_sales_comparables(data, top_n=100):
     comps = sales_history = data['RESPONSE_GROUP']['RESPONSE']['RESPONSE_DATA']['PROPERTY_INFORMATION_RESPONSE_ext'][
@@ -103,6 +114,7 @@ def get_sales_comparables_by_propertyid(address1,address2 , onlySales=True, only
 
 def get_property_details(address1, address2, api_key=ATTOM_API_KEY):
     base_url = f"{ATTOM_BASE_URL_V1}basicprofile?address1={address1}&address2={address2}"
+    print(f'Base url get_property_details is {base_url} ')
     url = base_url
 
     headers = {
