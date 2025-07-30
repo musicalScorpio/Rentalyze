@@ -145,7 +145,7 @@ def main():
                             st.warning(f"Failed to fetch nearby {category}s: {e}")
                             poi_data = []
 
-                    valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True,api_key='1771dee1eb8a4add11504c4ae6240721')
+                    valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True)
                     print(f"valid_tuples == {valid_tuples}")
                     #Add Sales Comparable
                     poi_data_name_lat_long = [
