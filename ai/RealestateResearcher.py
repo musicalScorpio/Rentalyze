@@ -50,9 +50,6 @@ def call_openai(prompt):
     print(result)
 
 
-
-
-
 # Function to get a prompt by reference_key
 def get_prompt(reference_key, address):
     for prompt in data["prompts"]:
@@ -63,7 +60,7 @@ def get_prompt(reference_key, address):
 
 # Example usage
 reference_key="TREND_SEARCH_FOR_ADDRESS"
-address = "1915 Hailsham Court, Orlando, FL 32824"
+address = "1234 main street"
 prompt = get_prompt(reference_key, address)
 if prompt:
     result = call_openai(prompt)

@@ -89,6 +89,6 @@ def extract_recent_sales(address: str) -> List[Dict[str, str]]:
 
 # Example Usage
 if __name__ == "__main__":
-    target_address = "1915 Hailsham Court, Orlando, FL 32824"
+    target_address = "123 mainstreet"
     results = extract_recent_sales(target_address)
     print(json.dumps(results, indent=2))
