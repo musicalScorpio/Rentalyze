@@ -57,7 +57,7 @@ def main():
                 location = get_location_from_address(address)
                 location = json.loads(location)
 
-                if location:
+                if location and location.get("state_code") and location.get("county"):
                     # After selecting the address and getting location
                     offer_price = st.number_input("Enter your offer price for the property ($)", min_value=0.0, step=1000.0)
                     rent_price = st.number_input("Enter rent($)", min_value=0.0,step=1000.0)

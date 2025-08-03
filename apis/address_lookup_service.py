@@ -54,7 +54,15 @@ def address_lookup(address):
 
     location, components = parse_address_details(address)
 
-    if location and components:
+    if location and components and components.get('house_number')\
+            and components.get('state_code')\
+            and components.get('state')\
+            and components.get('country')\
+            and components.get('road')\
+            and components.get('postcode')\
+            and components.get('county')\
+            and location.get('lat')\
+            and location.get('lng'):
         json_data =  json.dumps({
             "latitude": location['lat'],
             "longitude": location['lng'],
@@ -70,7 +78,7 @@ def address_lookup(address):
         print(f'JSON DATA >>>>> {json_data}')
         return json_data
     else:
-        return json.dumps({"error": "Address not found or invalid"}), 404
+        return json.dumps({"error": "Address not found or invalid"})
 
 
 def fetch_address_suggestions(query):
