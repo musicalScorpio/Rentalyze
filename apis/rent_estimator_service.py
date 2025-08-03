@@ -29,7 +29,8 @@ def get_zip_rent(zip_code, bedrooms):
         return {"error": response.text}
 
 """
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def get_fmr_data(zip_code="34473"):
     url = f"https://www.rentdata.org/lookup?zip={zip_code}"

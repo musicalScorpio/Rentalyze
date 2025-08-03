@@ -24,7 +24,8 @@ fmr_3	FY 2025 3-Bedroom Fair Market Rent
 fmr_4	FY 2025 4-Bedroom Fair Market Rent			
 
 """
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pandas as pd
 
 def parse_2025_data (state='FL',county = 'Marion County'):
