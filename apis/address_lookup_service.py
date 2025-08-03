@@ -22,7 +22,7 @@ csv_path = os.path.join(base_dir, "..", "data", "state_tax_and_insurance_rates_a
 df_roi = pd.read_csv(csv_path)
 
 OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
-import mortgage_estimator_service as mes
+import apis.mortgage_estimator_service as mes
 
 def parse_address_details(address):
     url = f"https://api.opencagedata.com/geocode/v1/json?q={address}&countrycode=us&key={OPENCAGE_API_KEY}"
