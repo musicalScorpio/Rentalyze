@@ -3,12 +3,14 @@
 author : Sam Mukherjee
 
 """
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from flask import Flask, jsonify, request
 import pandas as pd
 import os
 import utils.file_parser as fp
 import base64
-import rent_estimator_service
+import apis.rent_estimator_service as rent_estimator_service
 import utils.us_states as us_states
 
 app = Flask(__name__)
