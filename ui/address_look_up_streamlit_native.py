@@ -3,15 +3,14 @@
 author : Sam Mukherjee
 
 """
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pandas as pd
 import streamlit as st
 import requests
-import pydeck as pdk
 import folium
 from streamlit_folium import st_folium
-from folium import plugins
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 import ai.sales_comps_tool as sales_comp_tool
 import ai.charting_tool as charting_tool
