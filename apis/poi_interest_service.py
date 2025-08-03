@@ -55,7 +55,7 @@ def get_nearby_place (lat, lon,category):
         print(response.text)
         places = [
             {
-                "name": el["tags"]["name"],
+                "name": el["tags"].get("name", "Unnamed"),
                 "lat": el["lat"],
                 "lon": el["lon"]
             }
