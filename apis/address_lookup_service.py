@@ -15,7 +15,11 @@ import pydeck as pdk
 # Load environment variables from .env file
 load_dotenv('../env/relatize.env')
 app = Flask(__name__)
-df_roi = pd.read_csv("../data/state_tax_and_insurance_rates_all_50.csv")
+
+base_dir = os.path.dirname(__file__)  # where this script lives
+csv_path = os.path.join(base_dir, "..", "data", "state_tax_and_insurance_rates_all_50", "state_tax_and_insurance_rates_all_50.csv")
+
+df_roi = pd.read_csv(csv_path)
 
 OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 import mortgage_estimator_service as mes
