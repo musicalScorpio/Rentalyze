@@ -33,9 +33,11 @@ def parse_address_details(address):
 
 
 @app.route('/api/address-lookup', methods=['GET'])
-def address_lookup():
+def address_lookup_api():
     address = request.args.get('address')
+    return parse_address_details(address)
 
+def address_lookup(address):
     if not address:
         return jsonify({"error": "Address is required"}), 400
 
@@ -78,8 +80,11 @@ def fetch_address_suggestions(query):
 
 
 @app.route('/api/address-suggestions', methods=['GET'])
-def address_suggestions():
+def address_suggestions_api():
     query = request.args.get('query')
+    return address_suggestions(query)
+
+def address_suggestions(query):
 
     if not query:
         return jsonify({"error": "Query is required"}), 400
@@ -93,8 +98,8 @@ def address_suggestions():
         return jsonify({"error": "Failed to fetch address suggestions"}), 500
 
 @app.route('/api/roi-estimate', methods=['GET'])
-def roi_estimate():
-    try:
+def roi_estimate_api():
+
         price = float(request.args.get('price'))
         state = request.args.get('state', '').upper()
         rent = float(request.args.get('rent')) *12 #12 months rent
@@ -102,6 +107,11 @@ def roi_estimate():
         loan_amount = price - down_payment
         credit_score = float(request.args.get('credit_score'))
         has_mortgage = bool(request.args.get('has_mortgage'))
+        return roi_estimate(price, state, rent, down_payment, loan_amount,credit_score, has_mortgage)
+
+
+def roi_estimate(price, state, rent, down_payment,loan_amount, credit_score, has_mortgage):
+    try:
         yearly_debt_service = 0
         if has_mortgage:
             mortgage = mes.get_investor_mortgage_pi(credit_score=credit_score, loan_amount=loan_amount, years=30)

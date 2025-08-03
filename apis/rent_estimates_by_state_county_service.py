@@ -33,9 +33,12 @@ def get_counties_for_state(state_abbr):
     return counties
 
 @app.route('/api/rental-data', methods=['GET'])
-def get_rental_data():
+def get_rental_data_api():
     state_name = request.args.get('state_name')
     county_name = request.args.get('county_name')
+    return get_rental_data(state_name,county_name)
+
+def get_rental_data(state_name,county_name):
 
     # Convert state name to state abbreviation
     state_abbr =state_name # next((abbr for abbr, name in us_states.state_fullnames.items() if name == state_name), None)
