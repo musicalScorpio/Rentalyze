@@ -25,15 +25,19 @@ fmr_4	FY 2025 4-Bedroom Fair Market Rent
 
 """
 import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pandas as pd
 
-def parse_2025_data (state='FL',county = 'Marion County'):
-    return pd.read_csv('../data/FY2025_FMRs_by_County/FY25_FMRs_revised.csv')
 
+
+def parse_2025_data():
+    base_dir = os.path.dirname(__file__)  # where this script lives
+    csv_path = os.path.join(base_dir, "..", "data", "FY2025_FMRs_by_County", "FY25_FMRs_revised.csv")
+    return pd.read_csv(csv_path)
 
 def parse_rent_data (state='FL',county = 'Marion County'):
-    df = pd.read_csv('../data/FY2025_FMRs_by_County/FY25_FMRs_revised.csv')
+    base_dir = os.path.dirname(__file__)  # where this script lives
+    csv_path = os.path.join(base_dir, "..", "data", "FY2025_FMRs_by_County", "FY25_FMRs_revised.csv")
+    df = pd.read_csv(csv_path)
 
 
     # Example: Filter for a specific state and county
