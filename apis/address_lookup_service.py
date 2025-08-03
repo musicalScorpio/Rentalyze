@@ -125,6 +125,8 @@ def roi_estimate_api():
 
 def roi_estimate(price, state, rent, down_payment,loan_amount, credit_score, has_mortgage):
     try:
+        if not loan_amount and down_payment:
+            loan_amount = price -down_payment
         yearly_debt_service = 0
         if has_mortgage:
             mortgage = mes.get_investor_mortgage_pi(credit_score=credit_score, loan_amount=loan_amount, years=30)
