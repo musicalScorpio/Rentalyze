@@ -86,7 +86,7 @@ def main():
                             display_investment_summary(offer_price=offer_price, rent_price= rent_price, resp_json=resp_json)
                             st.write(f"Comparable sold recently")
                             print(f'Street is {parts[0]}')
-                            data = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'],api_key='1771dee1eb8a4add11504c4ae6240721')
+                            data = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'])
                             fig = charting_tool.getChart(data,offer_price)
                             st.pyplot(fig)
 
@@ -144,21 +144,25 @@ def main():
                         except Exception as e:
                             st.warning(f"Failed to fetch nearby {category}s: {e}")
                             poi_data = []
+                    valid_tuples =None
+                    try:
+                        valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True)
+                    except Exception as e:
+                        st.error(f"Failed to fetch nearby {category}s: {e}")
 
-                    valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True)
-                    print(f"valid_tuples == {valid_tuples}")
                     #Add Sales Comparable
                     poi_data_name_lat_long = [
                         {
                             #"name": f"${t[0]:,.0f} - {t[3]}, {t[4]}, {t[5]} {t[6]} ({t[7]}bd/{t[8]}ba)",
+                            "price":t[0],
                             "name": t[3],
-                            "lat": float(t[7]),
-                            "lon": float(t[8])
+                            "lat": float(t[1]),
+                            "lon": float(t[2])
                         }
-                        for t in valid_tuples["comparables"]
+                        for t in valid_tuples
                     ]
 
-                    add_to_map(category, icon_color, latitude, longitude, m, valid_tuples)
+                    add_to_map(category, icon_color, latitude, longitude, m, poi_data_name_lat_long)
 
                     # Display the map in Streamlit using st_folium
                     st_folium(m, width=700, height=500)
@@ -176,10 +180,11 @@ def add_to_map(category, icon_color, latitude_of_source_property, longitude_of_s
         poi_name = poi.get("name", "Unnamed")
         poi_lat = poi["lat"]
         poi_lon = poi["lon"]
+        poi_price = poi["price"]
 
         # Calculate distance in miles
         distance_miles = haversine_miles(latitude_of_source_property, longitude_of_source_property, poi_lat, poi_lon)
-        popup_text = f"{category.title()}: {poi_name}<br>📍 {distance_miles:.2f} miles away"
+        popup_text = f"{category.title()}: {poi_name}<br>📍Sold for : {poi_price} <br> {distance_miles:.2f} miles away"
 
         folium.Marker(
             location=[poi_lat, poi_lon],

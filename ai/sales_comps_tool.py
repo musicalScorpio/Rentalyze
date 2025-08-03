@@ -186,7 +186,11 @@ def parse_sales_comparables(data, onlySales=False, onlydDetailed=False, top_n=10
                     and float(item["sales_price"].strip()) > 0.0]
     if onlydDetailed:
 
-        valid_tuples = [json.loads(data_json)
+        print(f'I am inside the onlydDetailed{data_json}')
+
+        json_data=json.loads(data_json)
+
+        valid_tuples = [
             (
                 float(item["sales_price"].strip()),
                 float(item["lat"]),
@@ -199,9 +203,10 @@ def parse_sales_comparables(data, onlySales=False, onlydDetailed=False, top_n=10
                 item["bath"],
                 item["distance_from_subject"]
             )
-            for item in json.loads(data_json)if item["sales_price"] and item["sales_price"].strip() and float(item["sales_price"].strip()) > 0.0
-
+            for item in json_data['comparables']
+            if item["sales_price"] and item["sales_price"].strip() and float(item["sales_price"].strip()) > 0.0
         ]
+        #print(valid_tuples)
         return valid_tuples
 
     return data_json
@@ -247,3 +252,26 @@ def get_sales_comparables(street, city, county, state, zip_code,bedroomsRange=3,
     data = response.json()
     #print(json.dumps(data, indent=2))
     return data
+
+
+if __name__ == '__main__':
+    with open("comps.json", "r") as file:
+        comps_data = json.load(file)
+
+    valid_tuples = parse_sales_comparables(comps_data, onlySales=False, onlydDetailed=True)
+    poi_data_name_lat_long = [
+        {
+            # "name": f"${t[0]:,.0f} - {t[3]}, {t[4]}, {t[5]} {t[6]} ({t[7]}bd/{t[8]}ba)",
+            "name": t[3],
+            "lat": float(t[1]),
+            "lon": float(t[2])
+        }
+        for t in valid_tuples
+    ]
+
+    print(poi_data_name_lat_long)
+
+    for poi in poi_data_name_lat_long:
+        poi_name = poi.get("name", "Unnamed")
+        poi_lat = poi["lat"]
+        poi_lon = poi["lon"]
