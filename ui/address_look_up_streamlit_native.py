@@ -74,7 +74,7 @@ def main():
                     if offer_price and rent_price:
                         #url = f"{ADDRESS_LOOKUP_API_URL}/roi-estimate?price={offer_price}&rent={rent_price}&state={location['state_code']}&down_payment={.25 * offer_price}&credit_score={700}&has_mortgage=True"
                         #response = requests.get(url)
-                        resp_json = address_lookup_service.roi_estimate(price=offer_price,rent=rent_price,state=location['state_code'],down_payment=float(.25 * offer_price),loan_amount=None,credit_score=700,has_mortgage=True)
+                        resp_json = address_lookup_service.roi_estimate(price=offer_price,rent=float(rent_price *12),state=location['state_code'],down_payment=float(.25 * offer_price),loan_amount=None,credit_score=700,has_mortgage=True)
                         if resp_json:
                             display_investment_summary(offer_price=offer_price, rent_price= rent_price, resp_json=resp_json)
                             st.write(f"Comparable sold recently")
