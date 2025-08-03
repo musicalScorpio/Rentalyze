@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import pydeck as pdk
+from functools import lru_cache
 
 # Load environment variables from .env file
 load_dotenv('../env/relatize.env')

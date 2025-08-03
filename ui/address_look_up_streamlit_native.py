@@ -17,22 +17,23 @@ import ai.sales_comps_tool as sales_comp_tool
 import ai.charting_tool as charting_tool
 import apis.rent_estimates_by_state_county_service as rent_estimates_by_state_county_service
 import apis.address_lookup_service as address_lookup_service
+import apis.poi_interest_service as poi_interest_service
 
-
+@st.cache_data(ttl=3600)
 def get_projected_rent(state_name, county_name):
     """Fetch address suggestions from the backend API."""
     if state_name and county_name:
         return rent_estimates_by_state_county_service.get_rental_data(state_name, county_name)
     return []
 
-
+@st.cache_data(ttl=3600)
 def get_address_suggestions(query):
     """Fetch address suggestions from the backend API."""
     if query:
         return address_lookup_service.address_suggestions(query)
     return []
 
-
+@st.cache_data(ttl=3600)
 def get_location_from_address(address):
     return address_lookup_service.address_lookup(address)
 
@@ -109,7 +110,7 @@ def main():
                     #Shows POI
                     # Let user select POI category
                     category = st.selectbox("Show nearby points of interest",
-                                            ["recentsales", "grocery", "restaurant", "school", "hospital", "gym", "entertainment"])
+                                            ["grocery", "restaurant", "school", "hospital", "gym", "entertainment","recentsales"])
                     # Icon color map for categories
                     icon_color = {
                         "grocery": "green",
@@ -124,37 +125,50 @@ def main():
                     if str(category.title()).lower() != 'recentsales':
                         # Call the POI service
                         try:
-                            response = requests.get("http://127.0.0.1:5002/nearby", params={
-                                "lat": latitude,
-                                "lon": longitude,
-                                "category": category
-                            })
-                            response.raise_for_status()
-                            poi_data = response.json().get("places", [])
+                            # response = requests.get("http://127.0.0.1:5002/nearby", params={
+                            #     "lat": latitude,
+                            #     "lon": longitude,
+                            #     "category": category
+                            # })
+                            # response.raise_for_status()
+                            response_json = poi_interest_service.get_nearby_place(lat=latitude, lon=longitude,  category=category)
+                            try:
+                                parsed = json.loads(response_json)
+                                if "error" in parsed:
+                                    st.error(f"Failed to fetch nearby {category}s: {parsed['error']}")
+                                    poi_data = []
+                                else:
+                                    poi_data = parsed.get("places", [])
+                            except json.JSONDecodeError:
+                                st.error(f"Invalid JSON received for nearby {category}s.")
+                                poi_data = []
+
+                            print(f'poi_data>>>>>>>>>>>>>> {poi_data}')
                             # Add POIs to Folium map
                             add_to_map(category, icon_color, latitude, longitude, m, poi_data)
                         except Exception as e:
                             st.warning(f"Failed to fetch nearby {category}s: {e}")
                             poi_data = []
-                    valid_tuples =None
-                    try:
-                        valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True)
-                    except Exception as e:
-                        st.error(f"Failed to fetch nearby {category}s: {e}")
+                    else:
+                        valid_tuples =None
+                        try:
+                            valid_tuples = sales_comp_tool.get_sales_comparables_by_propertyid(parts[0], location['state_code'], onlySales=False,onlydDetailed=True)
+                        except Exception as e:
+                            st.error(f"Failed to fetch nearby {category}s: {e}")
+                        print(f'valid_tuples>>>>>>>>>>>>>> {valid_tuples}')
 
-                    #Add Sales Comparable
-                    poi_data_name_lat_long = [
-                        {
-                            #"name": f"${t[0]:,.0f} - {t[3]}, {t[4]}, {t[5]} {t[6]} ({t[7]}bd/{t[8]}ba)",
-                            "price":t[0],
-                            "name": t[3],
-                            "lat": float(t[1]),
-                            "lon": float(t[2])
-                        }
-                        for t in valid_tuples
-                    ]
+                        #Add Sales Comparable
+                        poi_data_name_lat_long = [
+                            {
+                                "price":t[0],
+                                "name": t[3],
+                                "lat": float(t[1]),
+                                "lon": float(t[2])
+                            }
+                            for t in valid_tuples
+                        ]
 
-                    add_to_map(category, icon_color, latitude, longitude, m, poi_data_name_lat_long)
+                        add_to_map(category, icon_color, latitude, longitude, m, poi_data_name_lat_long)
 
                     # Display the map in Streamlit using st_folium
                     st_folium(m, width=700, height=500)
@@ -172,11 +186,14 @@ def add_to_map(category, icon_color, latitude_of_source_property, longitude_of_s
         poi_name = poi.get("name", "Unnamed")
         poi_lat = poi["lat"]
         poi_lon = poi["lon"]
-        poi_price = poi["price"]
+        poi_price = poi.get("price", None)
 
         # Calculate distance in miles
         distance_miles = haversine_miles(latitude_of_source_property, longitude_of_source_property, poi_lat, poi_lon)
-        popup_text = f"{category.title()}: {poi_name}<br>📍Sold for : {poi_price} <br> {distance_miles:.2f} miles away"
+        if poi_price is not None:
+            popup_text = f"{category.title()}: {poi_name}<br>📍Sold for : {poi_price}<br>{distance_miles:.2f} miles away"
+        else:
+            popup_text = f"{category.title()}: {poi_name}<br>{distance_miles:.2f} miles away"
 
         folium.Marker(
             location=[poi_lat, poi_lon],

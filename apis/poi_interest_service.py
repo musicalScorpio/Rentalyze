@@ -3,8 +3,12 @@
 author : Sam Mukherjee
 
 """
-from flask import Flask, request, jsonify
+import json
+
+from flask import Flask, request
 import requests
+
+from functools import lru_cache
 
 app = Flask(__name__)
 
@@ -19,16 +23,19 @@ CATEGORY_TAGS = {
 }
 
 @app.route('/nearby', methods=['GET'])
-def get_nearby_places():
+def get_nearby_places_api():
     lat = request.args.get('lat')
     lon = request.args.get('lon')
     category = request.args.get('category')
+    return get_nearby_place(lat=lat, lon=lon, category=category)
+@lru_cache(maxsize=128)
+def get_nearby_place (lat, lon,category):
 
     if not lat or not lon or not category:
-        return jsonify({"error": "Missing parameters: lat, lon, and category are required."}), 400
+        return json.dumps({"error": "Missing parameters: lat, lon, and category are required."})
 
     if category not in CATEGORY_TAGS:
-        return jsonify({"error": f"Unsupported category. Choose from: {list(CATEGORY_TAGS.keys())}"}), 400
+        return json.dumps({"error": f"Unsupported category. Choose from: {list(CATEGORY_TAGS.keys())}"})
 
     overpass_tag = CATEGORY_TAGS[category]
 
@@ -48,17 +55,17 @@ def get_nearby_places():
         print(response.text)
         places = [
             {
-                "name": el.get("tags", {}).get("name", "Unnamed"),
+                "name": el["tags"]["name"],
                 "lat": el["lat"],
                 "lon": el["lon"]
             }
             for el in data.get("elements", [])
         ]
 
-        return jsonify({"places": places})
+        return json.dumps({"places": places})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return json.dumps({"error": str(e)})
 
 if __name__ == '__main__':
     app.run(port=5002, debug=True)
