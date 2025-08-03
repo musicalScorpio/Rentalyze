@@ -6,7 +6,8 @@ author : Sam Mukherjee
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import requests
-from flask import Flask, jsonify, request
+import json
+from flask import Flask, request
 from dotenv import load_dotenv
 import os
 import pandas as pd
@@ -25,14 +26,16 @@ OPENCAGE_API_KEY = os.getenv("OPENCAGE_API_KEY")
 import apis.mortgage_estimator_service as mes
 
 def parse_address_details(address):
+    print('Inside parse_address_details')
     url = f"https://api.opencagedata.com/geocode/v1/json?q={address}&countrycode=us&key={OPENCAGE_API_KEY}"
     response = requests.get(url)
+    print('Result from the Backend after address lookup is ', response)
     result = response.json()
-    print('Result from the Backend after address lookup is ', result)
+
     if response.status_code == 200 and result['results']:
         location = result['results'][0]['geometry']
         components = result['results'][0]['components']
-        print('Location from the Backend is ', location)
+        print(f'Location from the Backend is {location} and components is {components}')
         return location, components
     else:
         return None
@@ -40,17 +43,18 @@ def parse_address_details(address):
 
 @app.route('/api/address-lookup', methods=['GET'])
 def address_lookup_api():
+    print('Address Lookup API>>>>>>>>>')
     address = request.args.get('address')
-    return parse_address_details(address)
+    return address_lookup(address)
 
 def address_lookup(address):
     if not address:
-        return jsonify({"error": "Address is required"}), 400
+        return json.dumps({"error": "Address is required"}), 400
 
     location, components = parse_address_details(address)
 
-    if location:
-        return jsonify({
+    if location and components:
+        json_data =  json.dumps({
             "latitude": location['lat'],
             "longitude": location['lng'],
             "county": components['county'],
@@ -62,8 +66,10 @@ def address_lookup(address):
             "street_number": components['house_number']
 
         })
+        print(f'JSON DATA >>>>> {json_data}')
+        return json_data
     else:
-        return jsonify({"error": "Address not found or invalid"}), 404
+        return json.dumps({"error": "Address not found or invalid"}), 404
 
 
 def fetch_address_suggestions(query):
@@ -76,7 +82,6 @@ def fetch_address_suggestions(query):
     if response.status_code == 200:
         data = response.json()
         if data['results']:
-            print(data['results'])
             suggestions = [result['formatted'] for result in data['results']]
             return suggestions
         else:
@@ -93,15 +98,16 @@ def address_suggestions_api():
 def address_suggestions(query):
 
     if not query:
-        return jsonify({"error": "Query is required"}), 400
+        return json.dumps({"error": "Query is required"}), 400
 
+    suggestions = fetch_address_suggestions(query)
     # Fetch address suggestions from OpenCage
     suggestions = fetch_address_suggestions(query)
-
+    print(f'Inside address_suggestions suggestions = {suggestions}')
     if suggestions is not None:
-        return jsonify(suggestions)
+        return suggestions
     else:
-        return jsonify({"error": "Failed to fetch address suggestions"}), 500
+        return json.dumps({"error": "Failed to fetch address suggestions"}), 500
 
 @app.route('/api/roi-estimate', methods=['GET'])
 def roi_estimate_api():
@@ -135,7 +141,7 @@ def roi_estimate(price, state, rent, down_payment,loan_amount, credit_score, has
         cash_on_cash = noi /down_payment * 100
         roi_after_debt_service = noi / price * 100
 
-        return jsonify({
+        return json.dumps({
             "state": state,
             "home_price": price,
             "estimated_property_tax": property_tax,
@@ -150,6 +156,6 @@ def roi_estimate(price, state, rent, down_payment,loan_amount, credit_score, has
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return json.dumps({"error": str(e)}), 400
 if __name__ == '__main__':
     app.run(debug=True)

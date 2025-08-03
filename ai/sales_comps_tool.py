@@ -252,26 +252,3 @@ def get_sales_comparables(street, city, county, state, zip_code,bedroomsRange=3,
     data = response.json()
     #print(json.dumps(data, indent=2))
     return data
-
-
-if __name__ == '__main__':
-    with open("comps.json", "r") as file:
-        comps_data = json.load(file)
-
-    valid_tuples = parse_sales_comparables(comps_data, onlySales=False, onlydDetailed=True)
-    poi_data_name_lat_long = [
-        {
-            # "name": f"${t[0]:,.0f} - {t[3]}, {t[4]}, {t[5]} {t[6]} ({t[7]}bd/{t[8]}ba)",
-            "name": t[3],
-            "lat": float(t[1]),
-            "lon": float(t[2])
-        }
-        for t in valid_tuples
-    ]
-
-    print(poi_data_name_lat_long)
-
-    for poi in poi_data_name_lat_long:
-        poi_name = poi.get("name", "Unnamed")
-        poi_lat = poi["lat"]
-        poi_lon = poi["lon"]

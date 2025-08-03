@@ -5,12 +5,13 @@ author : Sam Mukherjee
 """
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from flask import Flask, jsonify, request
+from flask import Flask, request
 import pandas as pd
 import os
 import utils.file_parser as fp
 import base64
 import apis.rent_estimator_service as rent_estimator_service
+import json
 import utils.us_states as us_states
 
 app = Flask(__name__)
@@ -61,11 +62,11 @@ def get_rental_data(state_name,county_name):
                     f"${row['fmr_4']:,.0f}",
                 ]
             }
-            return jsonify(rent_data)
+            return json.dumps(rent_data)
         else:
-            return jsonify({"error": "No rent data available for the selected county."}), 404
+            return json.dumps({"error": "No rent data available for the selected county."})
     else:
-        return jsonify({"error": "Invalid state or county selection."}), 400
+        return json.dumps({"error": "Invalid state or county selection."})
 
 
 @app.route('/api/counties', methods=['GET'])
@@ -78,9 +79,9 @@ def get_counties():
 
     if state_abbr:
         counties = get_counties_for_state(state_abbr)
-        return jsonify(counties)
+        return counties
     else:
-        return jsonify({"error": "Invalid state selection."}), 400
+        return json.dumps({"error": "Invalid state selection."})
 
 @app.route('/api/rent', methods=['GET'])
 def get_rentByZip():

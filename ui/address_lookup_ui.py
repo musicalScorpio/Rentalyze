@@ -42,8 +42,10 @@ def get_address_suggestions(query):
 def get_location_from_address(address):
     """Fetch latitude and longitude for the selected address."""
     url = f"{ADDRESS_LOOKUP_API_URL}/address-lookup?address={address}"
+    print('Inside get_location_from_address')
     response = requests.get(url)
     if response.status_code == 200:
+        print(f'RESPONSE FROM ADDRESS_LOOKUP_API_URL{response.json()}')
         return response.json()
     return None
 
@@ -65,6 +67,7 @@ def main():
                 st.write(f"Selected Address: {address}")
                 # Get the latitude and longitude of the selected address
                 location = get_location_from_address(address)
+                print(f'Location>>>>>: {location}')
                 if location:
                     # After selecting the address and getting location
                     offer_price = st.number_input("Enter your offer price for the property ($)", min_value=0.0, step=1000.0)

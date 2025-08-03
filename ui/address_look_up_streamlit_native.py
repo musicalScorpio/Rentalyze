@@ -3,6 +3,7 @@
 author : Sam Mukherjee
 
 """
+import json
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pandas as pd
@@ -28,7 +29,7 @@ def get_projected_rent(state_name, county_name):
 def get_address_suggestions(query):
     """Fetch address suggestions from the backend API."""
     if query:
-        address_lookup_service.address_suggestions(query)
+        return address_lookup_service.address_suggestions(query)
     return []
 
 
@@ -53,12 +54,15 @@ def main():
                 st.write(f"Selected Address: {address}")
                 # Get the latitude and longitude of the selected address
                 location = get_location_from_address(address)
+                location = json.loads(location)
+
                 if location:
                     # After selecting the address and getting location
                     offer_price = st.number_input("Enter your offer price for the property ($)", min_value=0.0, step=1000.0)
                     rent_price = st.number_input("Enter rent($)", min_value=0.0,step=1000.0)
                     rent_data = get_projected_rent(state_name=location['state_code'], county_name=location['county'])
-
+                    rent_data =json.loads(rent_data)
+                    print(f'rent_data>>> {rent_data}')
                     # Convert to DataFrame
                     rent_df = pd.DataFrame(rent_data)
 
