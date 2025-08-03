@@ -17,7 +17,7 @@ load_dotenv('../env/relatize.env')
 app = Flask(__name__)
 
 base_dir = os.path.dirname(__file__)  # where this script lives
-csv_path = os.path.join(base_dir, "..", "data", "state_tax_and_insurance_rates_all_50", "state_tax_and_insurance_rates_all_50.csv")
+csv_path = os.path.join(base_dir, "..", "data", "state_tax_and_insurance_rates_all_50.csv")
 
 df_roi = pd.read_csv(csv_path)
 
