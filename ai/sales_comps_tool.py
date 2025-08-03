@@ -3,12 +3,16 @@
 author : Sam Mukherjee
 
 """
+from signal import valid_signals
+
 import requests
 import json
 
 
 import requests
 import json
+from functools import lru_cache
+
 from datetime import datetime
 from dotenv import load_dotenv
 import os
@@ -74,7 +78,7 @@ def parse_sales_comparables(data, top_n=100):
     return comparables
 """
 
-
+@lru_cache(maxsize=128)
 def get_sales_comparables_by_propertyid(address1,address2 , onlySales=True, onlydDetailed=False, api_key=ATTOM_API_KEY):
     property_id,bath_full,bed_full,heated_area = get_property_details(address1, address2, api_key)
     print(f'Got property id and it is {property_id}')
@@ -111,7 +115,7 @@ def get_sales_comparables_by_propertyid(address1,address2 , onlySales=True, only
     data = response.json()
 
     return parse_sales_comparables(data,onlySales,onlydDetailed)
-
+@lru_cache(maxsize=128)
 def get_property_details(address1, address2, api_key=ATTOM_API_KEY):
     base_url = f"{ATTOM_BASE_URL_V1}basicprofile?address1={address1}&address2={address2}"
     print(f'Base url get_property_details is {base_url} ')
@@ -130,7 +134,7 @@ def get_property_details(address1, address2, api_key=ATTOM_API_KEY):
         return None
 
     data = response.json()
-    #print(json.dumps(data, indent=2))
+    print(f' DATA {json.dumps(data, indent=2)}')
     identifier = data['property'][0]['identifier']['Id']
     bath_full = data['property'][0]['building']['rooms']['bathsTotal']
     bed_full = data['property'][0]['building']['rooms']['beds']
@@ -141,8 +145,8 @@ def parse_sales_comparables(data, onlySales=False, onlydDetailed=False, top_n=10
     #TODO Do a check here
     if onlydDetailed:
             onlySales=False
-    #print('DATA....')
-    #print(data)
+    print('DATA INSIDE PARSE ...')
+    print(data)
     comps = data['RESPONSE_GROUP']['RESPONSE']['RESPONSE_DATA']['PROPERTY_INFORMATION_RESPONSE_ext'][
         'SUBJECT_PROPERTY_ext']['PROPERTY']
 
@@ -206,12 +210,12 @@ def parse_sales_comparables(data, onlySales=False, onlydDetailed=False, top_n=10
             for item in json_data['comparables']
             if item["sales_price"] and item["sales_price"].strip() and float(item["sales_price"].strip()) > 0.0
         ]
-        #print(valid_tuples)
+        print(f'valid_tuples>>>>>>>>>>>>> INSIDE SALES COMPS {valid_tuples}')
         return valid_tuples
 
     return data_json
 
-
+@lru_cache(maxsize=128)
 def get_sales_comparables(street, city, county, state, zip_code,bedroomsRange=3,bathroomRange=2, api_key=ATTOM_API_KEY):
     base_url = "https://api.gateway.attomdata.com/property/v2/salescomparables/address"
 
@@ -252,3 +256,20 @@ def get_sales_comparables(street, city, county, state, zip_code,bedroomsRange=3,
     data = response.json()
     #print(json.dumps(data, indent=2))
     return data
+
+
+# if __name__ == '__main__':
+#     valid_tuples = get_sales_comparables_by_propertyid(address1="34 Pine Course loop",address2='FL',onlydDetailed=True)
+#
+#     # Add Sales Comparable
+#     poi_data_name_lat_long = [
+#         {
+#             "price": t[0],
+#             "name": t[3],
+#             "lat": float(t[1]),
+#             "lon": float(t[2])
+#         }
+#         for t in valid_tuples
+#     ]
+#
+#     print(poi_data_name_lat_long)
