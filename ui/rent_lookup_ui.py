@@ -2,6 +2,9 @@ import streamlit as st
 import requests
 import pandas as pd
 import plotly.express as px
+import json
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # API URL
 RENTAL_API_URL = "http://127.0.0.1:5001/api/rental-data"
@@ -117,7 +120,12 @@ def load_css(css_path):
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-load_css("../styles/brand_animate.css")
+#load_css("../styles/brand_animate.css")
+from pathlib import Path
+import os
+env_path = Path(__file__).resolve().parents[1] / "styles" / "brand_animate.css"
+load_css(env_path)
+
 
 # Logo (Rentalyze Text Only with Animation)
 st.markdown("""

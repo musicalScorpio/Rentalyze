@@ -37,9 +37,28 @@ def get_address_suggestions(query):
 def get_location_from_address(address):
     return address_lookup_service.address_lookup(address)
 
+@st.cache_data(ttl=3600)
+def load_css(css_path):
+    with open(css_path) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def main():
-    st.title("Address Autocomplete with Leaflet Map")
+    st.title("Investor's Friend - Get your reseaech right !")
+
+    from pathlib import Path
+    import os
+    env_path = Path(__file__).resolve().parents[1] / "styles" / "brand_animate.css"
+    load_css(env_path)
+
+    # Logo (Rentalyze Text Only with Animation)
+    st.markdown("""
+        <div class="brand-wrapper">
+            <div class="brand-text">
+                <span>R</span><span>e</span><span>n</span><span>t</span><span>a</span><span>l</span><span>y</span><span>z</span><span>e</span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
 
     # Real-time text input to search address
     query = st.text_input("Enter an address", "")
